@@ -1,0 +1,1000 @@
+> library(WGCNA);
+> options(stringsAsFactors = FALSE);
+> femData = read.csv("LiverFemale3600.csv");
+> maleData = read.csv("LiverMale3600.csv");
+> dim(femData)
+[1] 3600  143
+> names(femData)
+  [1] "substanceBXH"   "gene_symbol"    "LocusLinkID"   
+  [4] "ProteomeID"     "cytogeneticLoc" "CHROMOSOME"    
+  [7] "StartPosition"  "EndPosition"    "F2_2"          
+ [10] "F2_3"           "F2_14"          "F2_15"         
+ [13] "F2_19"          "F2_20"          "F2_23"         
+ [16] "F2_24"          "F2_26"          "F2_37"         
+ [19] "F2_42"          "F2_43"          "F2_45"         
+ [22] "F2_46"          "F2_47"          "F2_48"         
+ [25] "F2_51"          "F2_52"          "F2_54"         
+ [28] "F2_63"          "F2_65"          "F2_66"         
+ [31] "F2_68"          "F2_69"          "F2_70"         
+ [34] "F2_71"          "F2_72"          "F2_78"         
+ [37] "F2_79"          "F2_80"          "F2_81"         
+ [40] "F2_83"          "F2_86"          "F2_87"         
+ [43] "F2_88"          "F2_89"          "F2_107"        
+ [46] "F2_108"         "F2_109"         "F2_110"        
+ [49] "F2_111"         "F2_112"         "F2_117"        
+ [52] "F2_119"         "F2_125"         "F2_126"        
+ [55] "F2_127"         "F2_141"         "F2_142"        
+ [58] "F2_143"         "F2_144"         "F2_145"        
+ [61] "F2_154"         "F2_155"         "F2_156"        
+ [64] "F2_157"         "F2_162"         "F2_163"        
+ [67] "F2_164"         "F2_165"         "F2_166"        
+ [70] "F2_167"         "F2_169"         "F2_180"        
+ [73] "F2_181"         "F2_182"         "F2_187"        
+ [76] "F2_188"         "F2_189"         "F2_190"        
+ [79] "F2_191"         "F2_192"         "F2_194"        
+ [82] "F2_195"         "F2_200"         "F2_201"        
+ [85] "F2_212"         "F2_213"         "F2_214"        
+ [88] "F2_215"         "F2_221"         "F2_222"        
+ [91] "F2_223"         "F2_224"         "F2_225"        
+ [94] "F2_226"         "F2_227"         "F2_228"        
+ [97] "F2_241"         "F2_242"         "F2_243"        
+[100] "F2_244"         "F2_245"         "F2_247"        
+[103] "F2_248"         "F2_261"         "F2_263"        
+[106] "F2_264"         "F2_270"         "F2_271"        
+[109] "F2_272"         "F2_278"         "F2_287"        
+[112] "F2_288"         "F2_289"         "F2_290"        
+[115] "F2_291"         "F2_296"         "F2_298"        
+[118] "F2_299"         "F2_300"         "F2_302"        
+[121] "F2_303"         "F2_304"         "F2_305"        
+[124] "F2_306"         "F2_307"         "F2_308"        
+[127] "F2_309"         "F2_310"         "F2_311"        
+[130] "F2_312"         "F2_320"         "F2_321"        
+[133] "F2_323"         "F2_324"         "F2_325"        
+[136] "F2_326"         "F2_327"         "F2_328"        
+[139] "F2_329"         "F2_330"         "F2_332"        
+[142] "F2_355"         "F2_357"        
+> dim(maleData)
+[1] 3600  132
+> names(maleData)
+  [1] "substanceBXH"   "gene_symbol"    "LocusLinkID"   
+  [4] "ProteomeID"     "cytogeneticLoc" "CHROMOSOME"    
+  [7] "StartPosition"  "EndPosition"    "F2_4"          
+ [10] "F2_5"           "F2_6"           "F2_7"          
+ [13] "F2_8"           "F2_9"           "F2_10"         
+ [16] "F2_13"          "F2_16"          "F2_17"         
+ [19] "F2_18"          "F2_22"          "F2_27"         
+ [22] "F2_28"          "F2_29"          "F2_30"         
+ [25] "F2_33"          "F2_34"          "F2_35"         
+ [28] "F2_39"          "F2_40"          "F2_41"         
+ [31] "F2_49"          "F2_50"          "F2_55"         
+ [34] "F2_56"          "F2_57"          "F2_59"         
+ [37] "F2_60"          "F2_73"          "F2_74"         
+ [40] "F2_75"          "F2_76"          "F2_84"         
+ [43] "F2_85"          "F2_91"          "F2_92"         
+ [46] "F2_93"          "F2_94"          "F2_104"        
+ [49] "F2_105"         "F2_114"         "F2_115"        
+ [52] "F2_116"         "F2_120"         "F2_121"        
+ [55] "F2_122"         "F2_123"         "F2_124"        
+ [58] "F2_146"         "F2_147"         "F2_148"        
+ [61] "F2_149"         "F2_151"         "F2_152"        
+ [64] "F2_153"         "F2_158"         "F2_159"        
+ [67] "F2_160"         "F2_170"         "F2_171"        
+ [70] "F2_172"         "F2_173"         "F2_174"        
+ [73] "F2_176"         "F2_178"         "F2_179"        
+ [76] "F2_183"         "F2_184"         "F2_185"        
+ [79] "F2_186"         "F2_197"         "F2_198"        
+ [82] "F2_199"         "F2_207"         "F2_208"        
+ [85] "F2_209"         "F2_210"         "F2_216"        
+ [88] "F2_217"         "F2_218"         "F2_219"        
+ [91] "F2_220"         "F2_230"         "F2_231"        
+ [94] "F2_232"         "F2_233"         "F2_234"        
+ [97] "F2_235"         "F2_236"         "F2_237"        
+[100] "F2_238"         "F2_239"         "F2_249"        
+[103] "F2_250"         "F2_251"         "F2_252"        
+[106] "F2_254"         "F2_256"         "F2_257"        
+[109] "F2_265"         "F2_266"         "F2_268"        
+[112] "F2_274"         "F2_275"         "F2_276"        
+[115] "F2_279"         "F2_280"         "F2_281"        
+[118] "F2_282"         "F2_284"         "F2_285"        
+[121] "F2_286"         "F2_292"         "F2_294"        
+[124] "F2_295"         "F2_313"         "F2_314"        
+[127] "F2_315"         "F2_316"         "F2_317"        
+[130] "F2_318"         "F2_343"         "F2_353"        
+> # We work with two sets:
+> nSets = 2;
+> # For easier labeling of plots, create a vector holding descriptive names of the two sets.
+> setLabels = c("Female liver", "Male liver")
+> shortLabels = c("Female", "Male")
+> # Form multi-set expression data: columns starting from 9 contain actual expression data.
+> multiExpr = vector(mode = "list", length = nSets)
+> 
+> multiExpr[[1]] = list(data = as.data.frame(t(femData[-c(1:8)])));
+> names(multiExpr[[1]]$data) = femData$substanceBXH;
+> rownames(multiExpr[[1]]$data) = names(femData)[-c(1:8)];
+> multiExpr[[2]] = list(data = as.data.frame(t(maleData[-c(1:8)])));
+> names(multiExpr[[2]]$data) = maleData$substanceBXH;
+> rownames(multiExpr[[2]]$data) = names(maleData)[-c(1:8)];
+> # Check that the data has the correct format for many functions operating on multiple sets:
+> exprSize = checkSets(multiExpr)
+> gsg = goodSamplesGenesMS(multiExpr, verbose = 3);
+ Flagging genes and samples with too many missing values...
+  ..step 1
+   ..bad gene count: 0, bad sample counts: 0, 0
+> gsg$allOK
+[1] TRUE
+> if (!gsg$allOK)
++ {
++     # Print information about the removed genes:
++     if (sum(!gsg$goodGenes) > 0)
++         printFlush(paste("Removing genes:", paste(names(multiExpr[[1]]$data)[!gsg$goodGenes],
++                                                   collapse = ", ")))
++     for (set in 1:exprSize$nSets)
++     {
++         
++         
++         if (sum(!gsg$goodSamples[[set]]))
++             printFlush(paste("In set", setLabels[set], "removing samples",
++                              paste(rownames(multiExpr[[set]]$data)[!gsg$goodSamples[[set]]], collapse = ", ")))
++         # Remove the offending genes and samples
++         multiExpr[[set]]$data = multiExpr[[set]]$data[gsg$goodSamples[[set]], gsg$goodGenes];
++         
++     }
++     # Update exprSize
++     exprSize = checkSets(multiExpr)
++     
++ }
+> sampleTrees = list()
+> for (set in 1:nSets)
++ {
++     sampleTrees[[set]] = hclust(dist(multiExpr[[set]]$data), method = "average")
++ }
+> pdf(file = "Plots/SampleClustering.pdf", width = 12, height = 12);
+Error in pdf(file = "Plots/SampleClustering.pdf", width = 12, height = 12) : 
+  cannot open file 'Plots/SampleClustering.pdf'
+> par(mfrow=c(2,1))
+> par(mar = c(0, 4, 2, 0))
+> for (set in 1:nSets)
++     plot(sampleTrees[[set]], main = paste("Sample clustering on all genes in", setLabels[set]),
++          xlab="", sub="", cex = 0.7);
+> dev.off();
+null device 
+          1 
+> # Choose the "base" cut height for the female data set
+> baseHeight = 16
+> # Adjust the cut height for the male data set for the number of samples
+> cutHeights = c(16, 16*exprSize$nSamples[2]/exprSize$nSamples[1]);
+> # Re-plot the dendrograms including the cut lines
+> pdf(file = "Plots/SampleClustering.pdf", width = 12, height = 12);
+Error in pdf(file = "Plots/SampleClustering.pdf", width = 12, height = 12) : 
+  cannot open file 'Plots/SampleClustering.pdf'
+> par(mfrow=c(2,1))
+> par(mar = c(0, 4, 2, 0))
+> for (set in 1:nSets)
++ {
++     plot(sampleTrees[[set]], main = paste("Sample clustering on all genes in", setLabels[set]),
++          xlab="", sub="", cex = 0.7);
++     abline(h=cutHeights[set], col = "red");
++ }
+> dev.off();
+null device 
+          1 
+> for (set in 1:nSets)
++ {
++     # Find clusters cut by the line
++     labels = cutreeStatic(sampleTrees[[set]], cutHeight = cutHeights[set])
++     # Keep the largest one (labeled by the number 1)
++     keep = (labels==1)
++     multiExpr[[set]]$data = multiExpr[[set]]$data[keep, ]
++ }collectGarbage();
+Error: unexpected symbol in:
+"    multiExpr[[set]]$data = multiExpr[[set]]$data[keep, ]
+}collectGarbage"
+> # Check the size of the leftover data
+> exprSize = checkSets(multiExpr)
+> exprSize
+$nSets
+[1] 2
+
+$nGenes
+[1] 3600
+
+$nSamples
+[1] 135 124
+
+$structureOK
+[1] TRUE
+
+> for (set in 1:nSets)
++ {
++     # Find clusters cut by the line
++     labels = cutreeStatic(sampleTrees[[set]], cutHeight = cutHeights[set])
++     # Keep the largest one (labeled by the number 1)
++     keep = (labels==1)
++     multiExpr[[set]]$data = multiExpr[[set]]$data[keep, ]
++ }
+> collectGarbage();
+> # Check the size of the leftover data
+> exprSize = checkSets(multiExpr)
+> exprSize
+$nSets
+[1] 2
+
+$nGenes
+[1] 3600
+
+$nSamples
+[1] 134 124
+
+$structureOK
+[1] TRUE
+
+> traitData = read.csv("ClinicalTraits.csv");
+> dim(traitData)
+[1] 361  38
+> names(traitData)
+ [1] "X"                  "Mice"               "Number"            
+ [4] "Mouse_ID"           "Strain"             "sex"               
+ [7] "DOB"                "parents"            "Western_Diet"      
+[10] "Sac_Date"           "weight_g"           "length_cm"         
+[13] "ab_fat"             "other_fat"          "total_fat"         
+[16] "comments"           "X100xfat_weight"    "Trigly"            
+[19] "Total_Chol"         "HDL_Chol"           "UC"                
+[22] "FFA"                "Glucose"            "LDL_plus_VLDL"     
+[25] "MCP_1_phys"         "Insulin_ug_l"       "Glucose_Insulin"   
+[28] "Leptin_pg_ml"       "Adiponectin"        "Aortic.lesions"    
+[31] "Note"               "Aneurysm"           "Aortic_cal_M"      
+[34] "Aortic_cal_L"       "CoronaryArtery_Cal" "Myocardial_cal"    
+[37] "BMD_all_limbs"      "BMD_femurs_only"   
+> # remove columns that hold information we do not need.
+> allTraits = traitData[, -c(31, 16)];
+> allTraits = allTraits[, c(2, 11:36) ];
+> # See how big the traits are and what are the trait and sample names
+> dim(allTraits)
+[1] 361  27
+> names(allTraits)
+ [1] "Mice"               "weight_g"           "length_cm"         
+ [4] "ab_fat"             "other_fat"          "total_fat"         
+ [7] "X100xfat_weight"    "Trigly"             "Total_Chol"        
+[10] "HDL_Chol"           "UC"                 "FFA"               
+[13] "Glucose"            "LDL_plus_VLDL"      "MCP_1_phys"        
+[16] "Insulin_ug_l"       "Glucose_Insulin"    "Leptin_pg_ml"      
+[19] "Adiponectin"        "Aortic.lesions"     "Aneurysm"          
+[22] "Aortic_cal_M"       "Aortic_cal_L"       "CoronaryArtery_Cal"
+[25] "Myocardial_cal"     "BMD_all_limbs"      "BMD_femurs_only"   
+> allTraits$Mice
+  [1] "F2_290"  "F2_291"  "F2_292"  "F2_293"  "F2_294"  "F2_295" 
+  [7] "F2_296"  "F2_297"  "F2_298"  "F2_299"  "F2_300"  "F2_301" 
+ [13] "F2_302"  "F2_303"  "F2_304"  "F2_305"  "F2_306"  "F2_307" 
+ [19] "F2_308"  "F2_309"  "F2_310"  "F2_311"  "F2_312"  "F2_313" 
+ [25] "F2_314"  "F2_315"  "F2_316"  "F2_259"  "F2_260"  "F2_261" 
+ [31] "F2_262"  "F2_263"  "F2_264"  "F2_265"  "F2_266"  "F2_267" 
+ [37] "F2_268"  "F2_269"  "F2_270"  "F2_271"  "F2_272"  "F2_273" 
+ [43] "F2_274"  "F2_275"  "F2_276"  "F2_277"  "F2_278"  "F2_279" 
+ [49] "F2_280"  "F2_281"  "F2_282"  "F2_283"  "F2_284"  "F2_285" 
+ [55] "F2_286"  "F2_287"  "F2_231"  "F2_232"  "F2_233"  "F2_234" 
+ [61] "F2_235"  "F2_236"  "F2_237"  "F2_238"  "F2_239"  "F2_240" 
+ [67] "F2_241"  "F2_242"  "F2_243"  "F2_244"  "F2_245"  "F2_246" 
+ [73] "F2_247"  "F2_248"  "F2_249"  "F2_250"  "F2_251"  "F2_252" 
+ [79] "F2_253"  "F2_254"  "F2_255"  "F2_256"  "F2_257"  "F2_258" 
+ [85] "F2_40"   "F2_41"   "F2_42"   "F2_43"   "F2_44"   "F2_45"  
+ [91] "F2_46"   "F2_47"   "F2_48"   "F2_49"   "F2_50"   "F2_51"  
+ [97] "F2_52"   "F2_53"   "F2_54"   "F2_55"   "F2_56"   "F2_57"  
+[103] "F2_58"   "F2_59"   "F2_84"   "F2_85"   "F2_86"   "F2_87"  
+[109] "F2_88"   "F2_89"   "F2_91"   "F2_92"   "F2_93"   "F2_94"  
+[115] "F2_95"   "F1_96"   "F1_97"   "F1_98"   "F1_99"   "F1_100" 
+[121] "F1_101"  "F1_102"  "F1_103"  "F2_104"  "F2_105"  "F2_107" 
+[127] "F2_108"  "F2_109"  "F2_110"  "F2_111"  "F2_112"  "F2_113" 
+[133] "F2_114"  "F2_115"  "F2_116"  "F2_117"  "F2_118"  "F2_119" 
+[139] "F2_120"  "F2_121"  "F2_122"  "F2_123"  "F2_124"  "F2_125" 
+[145] "F2_126"  "F2_127"  "F2_128"  "B6_129"  "B6_130"  "B6_131" 
+[151] "B6_132"  "B6_133"  "B6_134"  "B6_135"  "B6_136"  "C3H_137"
+[157] "C3H_138" "C3H_139" "C3H_140" "F2_141"  "F2_142"  "F2_143" 
+[163] "F2_144"  "F2_145"  "F2_225"  "F2_226"  "F2_227"  "F2_228" 
+[169] "F2_229"  "F2_230"  "F2_175"  "F2_176"  "F2_177"  "F2_178" 
+[175] "F2_179"  "F2_180"  "F2_346"  "F2_347"  "F2_348"  "F2_349" 
+[181] "F2_350"  "F2_351"  "F2_352"  "F2_353"  "F2_354"  "F2_355" 
+[187] "F2_356"  "F2_357"  "F2_358"  "F2_359"  "C3H_360" "C3H_361"
+[193] "C3H_362" "C3H_363" "F2_203"  "C3H_204" "C3H_205" "C3H_206"
+[199] "F2_207"  "F2_208"  "F2_209"  "F2_210"  "F2_211"  "F2_212" 
+[205] "F2_213"  "F2_1"    "F2_2"    "F2_3"    "F2_4"    "F2_5"   
+[211] "F2_6"    "F2_7"    "F2_8"    "F2_9"    "F2_10"   "F2_11"  
+[217] "F2_12"   "F2_13"   "F2_14"   "F2_15"   "F2_16"   "F2_17"  
+[223] "F2_18"   "F2_19"   "F2_20"   "F2_21"   "F2_22"   "F2_23"  
+[229] "F2_24"   "F2_25"   "F2_26"   "F2_27"   "F2_28"   "F2_29"  
+[235] "F2_30"   "F2_31"   "F2_32"   "F2_33"   "F2_34"   "F2_35"  
+[241] "F2_36"   "F2_60"   "F2_61"   "F2_62"   "F2_63"   "F2_64"  
+[247] "F2_65"   "F2_66"   "F2_67"   "F2_68"   "F2_69"   "F2_70"  
+[253] "F2_71"   "F2_72"   "F2_73"   "F2_74"   "F2_75"   "F2_76"  
+[259] "F2_77"   "F2_78"   "F2_79"   "F2_80"   "F2_81"   "F2_82"  
+[265] "F2_83"   "F2_37"   "F2_38"   "F2_39"   "F2_181"  "F2_182" 
+[271] "F2_183"  "F2_184"  "F2_185"  "F2_186"  "F2_187"  "F2_188" 
+[277] "F2_189"  "F2_190"  "F2_191"  "F2_192"  "F2_193"  "F2_194" 
+[283] "F2_195"  "F2_196"  "F2_197"  "F2_198"  "F2_199"  "F2_200" 
+[289] "F2_201"  "F2_202"  "F2_215"  "F2_214"  "F2_216"  "F2_217" 
+[295] "F2_218"  "F2_219"  "F2_220"  "F2_221"  "F2_222"  "F2_223" 
+[301] "F2_224"  "F2_146"  "F2_147"  "F2_148"  "F2_149"  "F2_150" 
+[307] "F2_151"  "F2_152"  "F2_153"  "F2_154"  "F2_155"  "F2_156" 
+[313] "F2_157"  "F2_158"  "F2_159"  "F2_160"  "F2_161"  "F2_162" 
+[319] "F2_163"  "F2_164"  "F2_165"  "F2_166"  "F2_167"  "F2_168" 
+[325] "F2_169"  "F2_170"  "F2_171"  "F2_172"  "F2_173"  "F2_174" 
+[331] "F2_317"  "F2_318"  "F2_319"  "F2_320"  "F2_321"  "F2_322" 
+[337] "F2_323"  "F2_324"  "F2_325"  "F2_326"  "F2_327"  "F2_328" 
+[343] "F2_329"  "F2_330"  "F2_331"  "F2_332"  "F2_333"  "F2_334" 
+[349] "F2_335"  "F2_336"  "F2_337"  "F2_338"  "F2_339"  "F2_340" 
+[355] "F2_341"  "F2_342"  "F2_343"  "F2_344"  "F2_345"  "F2_288" 
+[361] "F2_289" 
+> # Form a multi-set structure that will hold the clinical traits.
+> Traits = vector(mode="list", length = nSets);
+> for (set in 1:nSets)
++ {
++     setSamples = rownames(multiExpr[[set]]$data);
++     traitRows = match(setSamples, allTraits$Mice);
++     Traits[[set]] = list(data = allTraits[traitRows, -1]);
++     rownames(Traits[[set]]$data) = allTraits[traitRows, 1];
++ }
+> collectGarbage();
+> # Define data set dimensions
+> nGenes = exprSize$nGenes;
+> nSamples = exprSize$nSamples;
+> save(multiExpr, Traits, nGenes, nSamples, setLabels, shortLabels, exprSize,
++      file = "Consensus-dataInput.RData");
+> lnames = load(file = "Consensus-dataInput.RData");
+> lnames
+[1] "multiExpr"   "Traits"      "nGenes"     
+[4] "nSamples"    "setLabels"   "shortLabels"
+[7] "exprSize"   
+> # Get the number of sets in the multiExpr structure.
+> nSets = checkSets(multiExpr)$nSets
+> # Choose a set of soft-thresholding powers
+> powers = c(seq(4,10,by=1), seq(12,20, by=2));
+> # Initialize a list to hold the results of scale-free analysis
+> powerTables = vector(mode = "list", length = nSets);
+> # Call the network topology analysis function for each set in turn
+> for (set in 1:nSets)
++     powerTables[[set]] = list(data = pickSoftThreshold(multiExpr[[set]]$data, powerVector=powers,
++                                                        verbose = 2)[[2]]);
+pickSoftThreshold: will use block size 3600.
+ pickSoftThreshold: calculating connectivity for given powers...
+   ..working on genes 1 through 3600 of 3600
+   Power SFT.R.sq slope truncated.R.sq
+1      4    0.506 -1.42          0.973
+2      5    0.681 -1.72          0.940
+3      6    0.902 -1.50          0.962
+4      7    0.921 -1.67          0.917
+5      8    0.904 -1.72          0.876
+6      9    0.859 -1.70          0.836
+7     10    0.833 -1.66          0.831
+8     12    0.853 -1.48          0.911
+9     14    0.876 -1.38          0.949
+10    16    0.907 -1.30          0.970
+11    18    0.912 -1.24          0.973
+12    20    0.931 -1.21          0.977
+   mean.k. median.k. max.k.
+1    56.50   47.2000  202.0
+2    32.20   25.1000  134.0
+3    19.90   14.5000   94.8
+4    13.20    8.6800   84.1
+5     9.25    5.3900   76.3
+6     6.80    3.5600   70.5
+7     5.19    2.3800   65.8
+8     3.33    1.1500   58.1
+9     2.35    0.5740   51.9
+10    1.77    0.3090   46.8
+11    1.39    0.1670   42.5
+12    1.14    0.0951   38.7
+pickSoftThreshold: will use block size 3600.
+ pickSoftThreshold: calculating connectivity for given powers...
+   ..working on genes 1 through 3600 of 3600
+   Power SFT.R.sq slope truncated.R.sq
+1      4    0.577 -1.58          0.938
+2      5    0.630 -1.68          0.926
+3      6    0.861 -1.36          0.968
+4      7    0.903 -1.52          0.932
+5      8    0.908 -1.61          0.889
+6      9    0.895 -1.62          0.867
+7     10    0.882 -1.59          0.868
+8     12    0.890 -1.49          0.904
+9     14    0.931 -1.38          0.958
+10    16    0.954 -1.31          0.980
+11    18    0.970 -1.26          0.984
+12    20    0.984 -1.22          0.995
+   mean.k. median.k. max.k.
+1    51.30   45.1000  196.0
+2    29.10   23.4000  132.0
+3    17.90   12.9000   91.8
+4    11.90    7.5200   79.6
+5     8.28    4.5600   72.0
+6     6.07    2.8800   66.2
+7     4.63    1.9000   61.3
+8     2.96    0.8760   53.5
+9     2.09    0.4370   47.3
+10    1.57    0.2270   42.1
+11    1.24    0.1190   37.7
+12    1.01    0.0642   33.9
+Warning message:
+executing %dopar% sequentially: no parallel backend registered 
+> collectGarbage();
+> # Plot the results:
+> colors = c("black", "red")
+> # Will plot these columns of the returned scale free analysis tables
+> plotCols = c(2,5,6,7)
+> colNames = c("Scale Free Topology Model Fit", "Mean connectivity", "Median connectivity",
++              "Max connectivity");
+> ylim = matrix(NA, nrow = 2, ncol = 4);
+> for (set in 1:nSets)
++ {
++     for (col in 1:length(plotCols))
++         
++         
++     {
++         
++         ylim[1, col] = min(ylim[1, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
++         ylim[2, col] = max(ylim[2, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
++         
++     }
++     
++ }
+> # Plot the quantities in the chosen columns vs. the soft thresholding power
+> sizeGrWindow(8, 6)
+NULL
+> #pdf(file = "Plots/scaleFreeAnalysis.pdf", wi = 8, he = 6)
+> par(mfcol = c(2,2));
+> par(mar = c(4.2, 4.2 , 2.2, 0.5))
+> cex1 = 0.7;
+> for (col in 1:length(plotCols)) for (set in 1:nSets)
++ {
++     if (set==1)
++     {
++         plot(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
++              xlab="Soft Threshold (power)",ylab=colNames[col],type="n", ylim = ylim[, col],
++              main = colNames[col]);
++         addGrid();
++     }
++     if (col==1)
++     {
++         text(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
++              labels=powers,cex=cex1,col=colors[set]);
++     } else
++         text(powerTables[[set]]$data[,1], powerTables[[set]]$data[,plotCols[col]],
++              labels=powers,cex=cex1,col=colors[set]);
++     if (col==1)
++     {
++         legend("bottomright", legend = setLabels, col = colors, pch = 20) ;
++     } else
++         legend("topright", legend = setLabels, col = colors, pch = 20) ;
++ }
+Error in plot.new() : figure margins too large
+> dev.off();
+null device 
+          1 
+> net = blockwiseConsensusModules(
++     multiExpr, power = 6, minModuleSize = 30, deepSplit = 2,
++     pamRespectsDendro = FALSE,
++     mergeCutHeight = 0.25, numericLabels = TRUE,
++     minKMEtoStay = 0,
++     saveTOMs = TRUE, verbose = 5)
+ Calculating consensus modules and module eigengenes block-wise from all genes
+ Calculating topological overlaps block-wise from all genes
+   Flagging genes and samples with too many missing values...
+    ..step 1
+     ..bad gene count: 0, bad sample counts: 0, 0
+ ....Working on set 1
+    TOM calculation: adjacency..
+    ..will not use multithreading.
+     Fraction of slow calculations: 0.396405
+    ..connectivity..
+    ..matrix multiplication (system BLAS)..
+    ..normalization..
+    ..done.
+ ....Working on set 2
+    TOM calculation: adjacency..
+    ..will not use multithreading.
+     Fraction of slow calculations: 0.438385
+    ..connectivity..
+    ..matrix multiplication (system BLAS)..
+    ..normalization..
+    ..done.
+Cluster size 3600 broken into 2108 1492 
+Cluster size 2108 broken into 1126 982 
+Done cluster 1126 
+Done cluster 982 
+Done cluster 2108 
+Done cluster 1492 
+Cluster size 3600 broken into 1576 2024 
+Cluster size 1576 broken into 694 882 
+Done cluster 694 
+Done cluster 882 
+Done cluster 1576 
+Cluster size 2024 broken into 1045 979 
+Done cluster 1045 
+Done cluster 979 
+Done cluster 2024 
+ ..Working on block 1 .
+ ....Working on set 1
+ ....Working on set 2
+ ....Calculating consensus network
+ ..Working on block 1 .
+ ....clustering and detecting modules..
+     ..done.
+ ....calculating eigengenes..
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         Working on set 2 ...
+ ....checking consensus modules for statistical meaningfulness..
+ ....checking for genes that should be reassigned..
+ ......module membership p-values..
+ ......module membership scores..
+ ......individual modules....100% 
+ ..merging consensus modules that are too close..
+     mergeCloseModules: Merging modules whose distance is less than 0.25
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         moduleEigengenes: Calculating 20 module eigengenes in given set.
+         Working on set 2 ...
+         moduleEigengenes: Calculating 20 module eigengenes in given set.
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         moduleEigengenes: Calculating 18 module eigengenes in given set.
+         Working on set 2 ...
+         moduleEigengenes: Calculating 18 module eigengenes in given set.
+       Calculating new MEs...
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         moduleEigengenes: Calculating 18 module eigengenes in given set.
+         Working on set 2 ...
+         moduleEigengenes: Calculating 18 module eigengenes in given set.
+> names(net)
+ [1] "colors"                   
+ [2] "unmergedColors"           
+ [3] "multiMEs"                 
+ [4] "goodSamples"              
+ [5] "goodGenes"                
+ [6] "dendrograms"              
+ [7] "TOMFiles"                 
+ [8] "blockGenes"               
+ [9] "blocks"                   
+[10] "originCount"              
+[11] "networkCalibrationSamples"
+[12] "individualTOMInfo"        
+[13] "consensusTOMInfo"         
+[14] "consensusQuantile"        
+> consMEs = net$multiMEs;
+> moduleLabels = net$colors;
+> # Convert the numeric labels to color labels
+> moduleColors = labels2colors(moduleLabels)
+> consTree = net$dendrograms[[1]];
+> sizeGrWindow(8,6);
+NULL
+> #pdf(file = "Plots/ConsensusDendrogram-auto.pdf", wi = 8, he = 6)
+> plotDendroAndColors(consTree, moduleColors,
++                     "Module colors",
++                     dendroLabels = FALSE, hang = 0.03,
++                     addGuide = TRUE, guideHang = 0.05,
++                     main = "Consensus gene dendrogram and module colors")
+> 
+> dev.off()
+null device 
+          1 
+> sizeGrWindow(8,6);
+NULL
+> #pdf(file = "Plots/ConsensusDendrogram-auto.pdf", wi = 8, he = 6)
+> plotDendroAndColors(consTree, moduleColors,
++                     "Module colors",
++                     dendroLabels = FALSE, hang = 0.03,
++                     addGuide = TRUE, guideHang = 0.05,
++                     main = "Consensus gene dendrogram and module colors")
+> dev.off()
+null device 
+          1 
+> # Choose a set of soft-thresholding powers
+> powers = c(seq(4,10,by=1), seq(12,20, by=2));
+> # Initialize a list to hold the results of scale-free analysis
+> powerTables = vector(mode = "list", length = nSets);
+> # Call the network topology analysis function for each set in turn
+> for (set in 1:nSets)
++     powerTables[[set]] = list(data = pickSoftThreshold(multiExpr[[set]]$data, powerVector=powers,
++                                                        verbose = 2)[[2]]);
+pickSoftThreshold: will use block size 3600.
+ pickSoftThreshold: calculating connectivity for given powers...
+   ..working on genes 1 through 3600 of 3600
+   Power SFT.R.sq slope truncated.R.sq
+1      4    0.506 -1.42          0.973
+2      5    0.681 -1.72          0.940
+3      6    0.902 -1.50          0.962
+4      7    0.921 -1.67          0.917
+5      8    0.904 -1.72          0.876
+6      9    0.859 -1.70          0.836
+7     10    0.833 -1.66          0.831
+8     12    0.853 -1.48          0.911
+9     14    0.876 -1.38          0.949
+10    16    0.907 -1.30          0.970
+11    18    0.912 -1.24          0.973
+12    20    0.931 -1.21          0.977
+   mean.k. median.k. max.k.
+1    56.50   47.2000  202.0
+2    32.20   25.1000  134.0
+3    19.90   14.5000   94.8
+4    13.20    8.6800   84.1
+5     9.25    5.3900   76.3
+6     6.80    3.5600   70.5
+7     5.19    2.3800   65.8
+8     3.33    1.1500   58.1
+9     2.35    0.5740   51.9
+10    1.77    0.3090   46.8
+11    1.39    0.1670   42.5
+12    1.14    0.0951   38.7
+pickSoftThreshold: will use block size 3600.
+ pickSoftThreshold: calculating connectivity for given powers...
+   ..working on genes 1 through 3600 of 3600
+   Power SFT.R.sq slope truncated.R.sq
+1      4    0.577 -1.58          0.938
+2      5    0.630 -1.68          0.926
+3      6    0.861 -1.36          0.968
+4      7    0.903 -1.52          0.932
+5      8    0.908 -1.61          0.889
+6      9    0.895 -1.62          0.867
+7     10    0.882 -1.59          0.868
+8     12    0.890 -1.49          0.904
+9     14    0.931 -1.38          0.958
+10    16    0.954 -1.31          0.980
+11    18    0.970 -1.26          0.984
+12    20    0.984 -1.22          0.995
+   mean.k. median.k. max.k.
+1    51.30   45.1000  196.0
+2    29.10   23.4000  132.0
+3    17.90   12.9000   91.8
+4    11.90    7.5200   79.6
+5     8.28    4.5600   72.0
+6     6.07    2.8800   66.2
+7     4.63    1.9000   61.3
+8     2.96    0.8760   53.5
+9     2.09    0.4370   47.3
+10    1.57    0.2270   42.1
+11    1.24    0.1190   37.7
+12    1.01    0.0642   33.9
+> collectGarbage();
+> # Plot the results:
+> colors = c("black", "red")
+> # Will plot these columns of the returned scale free analysis tables
+> plotCols = c(2,5,6,7)
+> colNames = c("Scale Free Topology Model Fit", "Mean connectivity", "Median connectivity",
++              "Max connectivity");
+> # Get the minima and maxima of the plotted points
+> ylim = matrix(NA, nrow = 2, ncol = 4);
+> for (set in 1:nSets)
++ {
++     for (col in 1:length(plotCols))
++         
++         
++     {
++         
++         ylim[1, col] = min(ylim[1, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
++         ylim[2, col] = max(ylim[2, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
++         
++     }
++     
++ }
+> # Plot the quantities in the chosen columns vs. the soft thresholding power
+> sizeGrWindow(8, 6)
+NULL
+> #pdf(file = "Plots/scaleFreeAnalysis.pdf", wi = 8, he = 6)
+> par(mfcol = c(2,2));
+> par(mar = c(4.2, 4.2 , 2.2, 0.5))
+> cex1 = 0.7;
+> for (col in 1:length(plotCols)) for (set in 1:nSets)
++ {
++     if (set==1)
++     {
++         plot(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
++              xlab="Soft Threshold (power)",ylab=colNames[col],type="n", ylim = ylim[, col],
++              main = colNames[col]);
++         addGrid();
++     }
++     if (col==1)
++     {
++         text(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
++              labels=powers,cex=cex1,col=colors[set]);
++     } else
++         text(powerTables[[set]]$data[,1], powerTables[[set]]$data[,plotCols[col]],
++              labels=powers,cex=cex1,col=colors[set]);
++     if (col==1)
++     {
++         legend("bottomright", legend = setLabels, col = colors, pch = 20) ;
++     } else
++         legend("topright", legend = setLabels, col = colors, pch = 20) ;
++ }
+Error in plot.new() : figure margins too large
+> save(consMEs, moduleLabels, moduleColors, consTree, file = "Consensus-NetworkConstruction-auto.RData")
+> lnames = load(file = "Consensus-dataInput.RData");
+> lnames
+[1] "multiExpr"   "Traits"      "nGenes"     
+[4] "nSamples"    "setLabels"   "shortLabels"
+[7] "exprSize"   
+> nSets = checkSets(multiExpr)$nSets
+> # Choose a set of soft-thresholding powers
+> powers = c(seq(4,10,by=1), seq(12,20, by=2));
+> # Initialize a list to hold the results of scale-free analysis
+> powerTables = vector(mode = "list", length = nSets);
+> # Call the network topology analysis function for each set in turn
+> for (set in 1:nSets)
++     powerTables[[set]] = list(data = pickSoftThreshold(multiExpr[[set]]$data, powerVector=powers,
++                                                        verbose = 2)[[2]]);
+pickSoftThreshold: will use block size 3600.
+ pickSoftThreshold: calculating connectivity for given powers...
+   ..working on genes 1 through 3600 of 3600
+   Power SFT.R.sq slope truncated.R.sq
+1      4    0.506 -1.42          0.973
+2      5    0.681 -1.72          0.940
+3      6    0.902 -1.50          0.962
+4      7    0.921 -1.67          0.917
+5      8    0.904 -1.72          0.876
+6      9    0.859 -1.70          0.836
+7     10    0.833 -1.66          0.831
+8     12    0.853 -1.48          0.911
+9     14    0.876 -1.38          0.949
+10    16    0.907 -1.30          0.970
+11    18    0.912 -1.24          0.973
+12    20    0.931 -1.21          0.977
+   mean.k. median.k. max.k.
+1    56.50   47.2000  202.0
+2    32.20   25.1000  134.0
+3    19.90   14.5000   94.8
+4    13.20    8.6800   84.1
+5     9.25    5.3900   76.3
+6     6.80    3.5600   70.5
+7     5.19    2.3800   65.8
+8     3.33    1.1500   58.1
+9     2.35    0.5740   51.9
+10    1.77    0.3090   46.8
+11    1.39    0.1670   42.5
+12    1.14    0.0951   38.7
+pickSoftThreshold: will use block size 3600.
+ pickSoftThreshold: calculating connectivity for given powers...
+   ..working on genes 1 through 3600 of 3600
+   Power SFT.R.sq slope truncated.R.sq
+1      4    0.577 -1.58          0.938
+2      5    0.630 -1.68          0.926
+3      6    0.861 -1.36          0.968
+4      7    0.903 -1.52          0.932
+5      8    0.908 -1.61          0.889
+6      9    0.895 -1.62          0.867
+7     10    0.882 -1.59          0.868
+8     12    0.890 -1.49          0.904
+9     14    0.931 -1.38          0.958
+10    16    0.954 -1.31          0.980
+11    18    0.970 -1.26          0.984
+12    20    0.984 -1.22          0.995
+   mean.k. median.k. max.k.
+1    51.30   45.1000  196.0
+2    29.10   23.4000  132.0
+3    17.90   12.9000   91.8
+4    11.90    7.5200   79.6
+5     8.28    4.5600   72.0
+6     6.07    2.8800   66.2
+7     4.63    1.9000   61.3
+8     2.96    0.8760   53.5
+9     2.09    0.4370   47.3
+10    1.57    0.2270   42.1
+11    1.24    0.1190   37.7
+12    1.01    0.0642   33.9
+> collectGarbage();
+> # Plot the results:
+> colors = c("black", "red")
+> # Will plot these columns of the returned scale free analysis tables
+> plotCols = c(2,5,6,7)
+> colNames = c("Scale Free Topology Model Fit", "Mean connectivity", "Median connectivity",
++              "Max connectivity");
+> 
+> 
+> # Get the minima and maxima of the plotted points
+> ylim = matrix(NA, nrow = 2, ncol = 4);
+> for (set in 1:nSets)
++ {
++     for (col in 1:length(plotCols))
++     {
++         ylim[1, col] = min(ylim[1, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
++         ylim[2, col] = max(ylim[2, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
++     }
++ }
+> # Plot the quantities in the chosen columns vs. the soft thresholding power
+> sizeGrWindow(8, 6)
+NULL
+> #pdf(file = "Plots/scaleFreeAnalysis.pdf", wi = 8, he = 6);
+> par(mfcol = c(2,2));
+> par(mar = c(4.2, 4.2 , 2.2, 0.5))
+> cex1 = 0.7;
+> for (col in 1:length(plotCols)) for (set in 1:nSets)
++ {
++     if (set==1)
++     {
++         plot(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
++              xlab="Soft Threshold (power)",ylab=colNames[col],type="n", ylim = ylim[, col],
++              main = colNames[col]);
++         addGrid();
++     }
++     if (col==1)
++     {
++         text(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
++              labels=powers,cex=cex1,col=colors[set]);
++     } else
++         text(powerTables[[set]]$data[,1], powerTables[[set]]$data[,plotCols[col]],
++              labels=powers,cex=cex1,col=colors[set]);
++     if (col==1)
++     {
++         legend("bottomright", legend = setLabels, col = colors, pch = 20) ;
++     } else
++         legend("topright", legend = setLabels, col = colors, pch = 20) ;
++ }
+Error in plot.new() : figure margins too large
+> bnet = blockwiseConsensusModules(
++     multiExpr, maxBlockSize = 2000, power = 6, minModuleSize = 30,
++     deepSplit = 2,
++     pamRespectsDendro = FALSE,
++     mergeCutHeight = 0.25, numericLabels = TRUE,
++     minKMEtoStay = 0,
++     saveTOMs = TRUE, verbose = 5)
+ Calculating consensus modules and module eigengenes block-wise from all genes
+ Calculating topological overlaps block-wise from all genes
+   Flagging genes and samples with too many missing values...
+    ..step 1
+     ..bad gene count: 0, bad sample counts: 0, 0
+ ....pre-clustering genes to determine blocks..
+   Consensus projective K-means:
+   ..using 180 centers.
+   ..imputing missing data..
+mtd.apply: working on set 1
+Cluster size 3600 broken into 2108 1492 
+Cluster size 2108 broken into 1126 982 
+Done cluster 1126 
+Done cluster 982 
+Done cluster 2108 
+Done cluster 1492 
+mtd.apply: working on set 2
+Cluster size 3600 broken into 1576 2024 
+Cluster size 1576 broken into 694 882 
+Done cluster 694 
+Done cluster 882 
+Done cluster 1576 
+Cluster size 2024 broken into 1045 979 
+Done cluster 1045 
+Done cluster 979 
+Done cluster 2024 
+   ..consensus k-means clustering..
+    ..iteration 1
+      ..proposing to move 3317 genes..move accepted.
+    ..iteration 2
+      ..proposing to move 1450 genes..move accepted.
+    ..iteration 3
+      ..proposing to move 542 genes..move accepted.
+    ..iteration 4
+      ..proposing to move 273 genes..move accepted.
+    ..iteration 5
+      ..proposing to move 137 genes..move accepted.
+    ..iteration 6
+      ..proposing to move 75 genes..move accepted.
+    ..iteration 7
+      ..proposing to move 22 genes..move accepted.
+    ..iteration 8
+      ..proposing to move 15 genes..move accepted.
+    ..iteration 9
+      ..proposing to move 1 genes..move accepted.
+    ..iteration 10
+Could not find a suitable move to improve the clustering.
+   ..merging smaller clusters...
+ ..Working on block 1 .
+ ....Working on set 1
+    TOM calculation: adjacency..
+    ..will not use multithreading.
+     Fraction of slow calculations: 0.429965
+    ..connectivity..
+    ..matrix multiplication (system BLAS)..
+    ..normalization..
+    ..done.
+ ....Working on set 2
+    TOM calculation: adjacency..
+    ..will not use multithreading.
+     Fraction of slow calculations: 0.484368
+    ..connectivity..
+    ..matrix multiplication (system BLAS)..
+    ..normalization..
+    ..done.
+ ..Working on block 2 .
+ ....Working on set 1
+    TOM calculation: adjacency..
+    ..will not use multithreading.
+     Fraction of slow calculations: 0.356847
+    ..connectivity..
+    ..matrix multiplication (system BLAS)..
+    ..normalization..
+    ..done.
+ ....Working on set 2
+    TOM calculation: adjacency..
+    ..will not use multithreading.
+     Fraction of slow calculations: 0.383356
+    ..connectivity..
+    ..matrix multiplication (system BLAS)..
+    ..normalization..
+    ..done.
+Cluster size 3600 broken into 2108 1492 
+Cluster size 2108 broken into 1126 982 
+Done cluster 1126 
+Done cluster 982 
+Done cluster 2108 
+Done cluster 1492 
+Cluster size 3600 broken into 1576 2024 
+Cluster size 1576 broken into 694 882 
+Done cluster 694 
+Done cluster 882 
+Done cluster 1576 
+Cluster size 2024 broken into 1045 979 
+Done cluster 1045 
+Done cluster 979 
+Done cluster 2024 
+ ..Working on block 1 .
+ ....clustering and detecting modules..
+     ..done.
+ ....calculating eigengenes..
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         Working on set 2 ...
+ ....checking consensus modules for statistical meaningfulness..
+ ..Working on block 2 .
+ ....clustering and detecting modules..
+     ..done.
+ ....calculating eigengenes..
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         Working on set 2 ...
+ ....checking consensus modules for statistical meaningfulness..
+ ....checking for genes that should be reassigned..
+ ......module membership p-values..
+ ......module membership scores..
+ ......individual modules....100% 
+ ..merging consensus modules that are too close..
+     mergeCloseModules: Merging modules whose distance is less than 0.25
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         moduleEigengenes: Calculating 19 module eigengenes in given set.
+         Working on set 2 ...
+         moduleEigengenes: Calculating 19 module eigengenes in given set.
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         moduleEigengenes: Calculating 17 module eigengenes in given set.
+         Working on set 2 ...
+         moduleEigengenes: Calculating 17 module eigengenes in given set.
+       Calculating new MEs...
+       multiSetMEs: Calculating module MEs.
+         Working on set 1 ...
+         moduleEigengenes: Calculating 17 module eigengenes in given set.
+         Working on set 2 ...
+         moduleEigengenes: Calculating 17 module eigengenes in given set.
+> load(file = "Consensus-NetworkConstruction-auto.RData")
+> bwLabels = matchLabels(bnet$colors, moduleLabels, pThreshold = 1e-7);
+> bwColors = labels2colors(bwLabels)
+> # Here we show a more flexible way of plotting several trees and colors on one page
+> sizeGrWindow(12,6)
+NULL
+> 
+> 
+> #pdf(file = "Plots/BlockwiseGeneDendrosAndColors.pdf", wi = 12, he = 6);
+> # Use the layout function for more involved screen sectioning
+> layout(matrix(c(1:4), 2, 2), heights = c(0.8, 0.2), widths = c(1,1))
+> #layout.show(4);
+> nBlocks = length(bnet$dendrograms)
+> # Plot the dendrogram and the module colors underneath for each block
+> for (block in 1:nBlocks)
++     plotDendroAndColors(bnet$dendrograms[[block]], moduleColors[bnet$blockGenes[[block]]],
++                         "Module colors",
++                         main = paste("Gene dendrogram and module colors in block", block),
++                         dendroLabels = FALSE, hang = 0.03,
++                         addGuide = TRUE, guideHang = 0.05,
++                         setLayout = FALSE)
+> sizeGrWindow(12,9);
+NULL
+> #pdf(file="Plots/SingleDendro-BWColors.pdf", wi = 12, he = 9);
+> plotDendroAndColors(consTree,
++                     cbind(moduleColors, bwColors),
++                     c("Single block", "Blockwise"),
++                     dendroLabels = FALSE, hang = 0.03,
++                     addGuide = TRUE, guideHang = 0.05,
++                     main = "Single block consensus gene dendrogram and module colors")

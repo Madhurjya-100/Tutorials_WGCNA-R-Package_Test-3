@@ -998,4 +998,221 @@ Warning in install.packages :
 A version of this package for your version of R might be available elsewhere,
 see the ideas at
 https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
-> 
+> > library(AnnotationDbi)
+Loading required package: stats4
+Loading required package: BiocGenerics
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append,
+    as.data.frame, basename, cbind,
+    colnames, dirname, do.call,
+    duplicated, eval, evalq, Filter,
+    Find, get, grep, grepl, intersect,
+    is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax,
+    pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce,
+    rownames, sapply, setdiff, sort,
+    table, tapply, union, unique,
+    unsplit, which.max, which.min
+
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory
+    material; view with
+    'browseVignettes()'. To cite
+    Bioconductor, see
+    'citation("Biobase")', and for
+    packages 'citation("pkgname")'.
+
+Loading required package: IRanges
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+
+Attaching package: ‘IRanges’
+
+The following object is masked from ‘package:grDevices’:
+
+    windows
+
+> library(GO.db)
+
+> library(org.Mm.eg.db)
+
+> library(WGCNA)
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:IRanges’:
+
+    cor
+
+The following object is masked from ‘package:S4Vectors’:
+
+    cor
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+> setwd("E:/4_TU_study_materials/8th_Semester/3_BI452_Systems_Biology/test3_wgcna/wd_wgcna")
+> getwd()
+[1] "E:/4_TU_study_materials/8th_Semester/3_BI452_Systems_Biology/test3_wgcna/wd_wgcna"
+> options(stringsAsFactors = FALSE);
+> lnames = load(file = "FemaleLiver-01-dataInput.RData");
+> lnames
+[1] "datExpr"   "datTraits"
+> lnames = load(file = "FemaleLiver-02-networkConstruction-auto.RData");
+> lnames
+[1] "MEs"          "moduleLabels" "moduleColors" "geneTree"    
+> nGenes = ncol(datExpr)
+> nSamples = nrow(datExpr)
+> dissTOM = 1-TOMsimilarityFromExpr(datExpr, power = 6);
+TOM calculation: adjacency..
+..will not use multithreading.
+ Fraction of slow calculations: 0.396405
+..connectivity..
+..matrix multiplication (system BLAS)..
+..normalization..
+..done.
+> plotTOM = dissTOM^7;
+> diag(plotTOM) = NA;
+> sizeGrWindow(9,9)
+NULL
+> TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
+Error in plot.new() : figure margins too large
+> sizeGrWindow(5,5)
+NULL
+> TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
+Error in plot.new() : figure margins too large
+> nSelect = 400
+> # For reproducibility, we set the random seed
+> set.seed(10);
+> select = sample(nGenes, size = nSelect);
+> selectTOM = dissTOM[select, select];
+> # There’s no simple way of restricting a clustering tree to a subset of genes, so we must re-cluster.
+> selectTree = hclust(as.dist(selectTOM), method = "average")
+> selectColors = moduleColors[select];
+> # Open a graphical window
+> sizeGrWindow(9,9)
+NULL
+> # Taking the dissimilarity to a power, say 10, makes the plot more informative by effectively changing
+> # the color palette; setting the diagonal to NA also improves the clarity of the plot
+> plotDiss = selectTOM^7;
+> diag(plotDiss) = NA;
+> TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
+Error in plot.new() : figure margins too large
+> # Recalculate module eigengenes
+> MEs = moduleEigengenes(datExpr, moduleColors)$eigengenes
+> # Isolate weight from the clinical traits
+> weight = as.data.frame(datTraits$weight_g);
+> names(weight) = "weight"
+> # Add the weight to existing module eigengenes
+> MET = orderMEs(cbind(MEs, weight))
+> # Plot the relationships among the eigengenes and the trait
+> sizeGrWindow(5,7.5);
+NULL
+> par(cex = 0.9)
+> plotEigengeneNetworks(MET, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2), cex.lab = 0.8, xLabelsAngle
++                       = 90)
+Error in plot.new() : figure margins too large
+> # Plot the dendrogram
+> sizeGrWindow(6,6);
+NULL
+> par(cex = 1.0)
+> plotEigengeneNetworks(MET, "Eigengene dendrogram", marDendro = c(0,4,2,0),
++                       plotHeatmaps = FALSE)
+> # Plot the heatmap matrix (note: this plot will overwrite the dendrogram plot)
+> par(cex = 1.0)
+> plotEigengeneNetworks(MET, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2),
++                       plotDendrograms = FALSE, xLabelsAngle = 90)
+Error in plot.new() : figure margins too large
+> # Recalculate topological overlap
+> TOM = TOMsimilarityFromExpr(datExpr, power = 6);
+TOM calculation: adjacency..
+..will not use multithreading.
+ Fraction of slow calculations: 0.396405
+..connectivity..
+..matrix multiplication (system BLAS)..
+..normalization..
+..done.
+> # Read in the annotation file
+> annot = read.csv(file = "GeneAnnotation.csv");
+> # Select module
+> module = "brown";
+> # Select module probes
+> probes = names(datExpr)
+> inModule = (moduleColors==module);
+> modProbes = probes[inModule];
+> # Select the corresponding Topological Overlap
+> modTOM = TOM[inModule, inModule];
+> dimnames(modTOM) = list(modProbes, modProbes)
+> # Export the network into an edge list file VisANT can read
+> vis = exportNetworkToVisANT(modTOM,
++                             file = paste("VisANTInput-", module, ".txt", sep=""),
++                             weighted = TRUE,
++                             threshold = 0,
++                             probeToGene = data.frame(annot$substanceBXH, annot$gene_symbol) )
+> nTop = 30;
+> IMConn = softConnectivity(datExpr[, modProbes]);
+ softConnectivity: FYI: connecitivty of genes with less than 45 valid samples will be returned as NA.
+ ..calculating connectivities....100% 
+> top = (rank(-IMConn) <= nTop)
+> vis = exportNetworkToVisANT(modTOM[top, top],
++                             file = paste("VisANTInput-", module, "-top30.txt", sep=""),
++                             weighted = TRUE,
++                             threshold = 0,
++                             probeToGene = data.frame(annot$substanceBXH, annot$gene_symbol) )
+> # Recalculate topological overlap if needed
+> TOM = TOMsimilarityFromExpr(datExpr, power = 6);
+TOM calculation: adjacency..
+..will not use multithreading.
+ Fraction of slow calculations: 0.396405
+..connectivity..
+..matrix multiplication (system BLAS)..
+..normalization..
+..done.
+> # Read in the annotation file
+> annot = read.csv(file = "GeneAnnotation.csv");
+> # Select modules
+> modules = c("brown", "red");
+> # Select module probes
+> probes = names(datExpr)
+> inModule = is.finite(match(moduleColors, modules));
+> modProbes = probes[inModule];
+> modGenes = annot$gene_symbol[match(modProbes, annot$substanceBXH)];
+> # Select the corresponding Topological Overlap
+> modTOM = TOM[inModule, inModule];
+> dimnames(modTOM) = list(modProbes, modProbes)
+> # Export the network into edge and node list files Cytoscape can read
+> cyt = exportNetworkToCytoscape(modTOM,
++                                edgeFile = paste("CytoscapeInput-edges-", paste(modules, collapse="-"), ".txt", sep=""),
++                                nodeFile = paste("CytoscapeInput-nodes-", paste(modules, collapse="-"), ".txt", sep=""),
++                                weighted = TRUE,
++                                threshold = 0.02,
++                                nodeNames = modProbes,
++                                altNodeNames = modGenes,
++                                nodeAttr = moduleColors[inModule]);
